@@ -44,7 +44,12 @@ def parse_test_results():
             csv_handler = csv.reader(f)
             for row in csv_handler:
                 if item in row:
-                    results[item] = row[1]
+                    results["%s_base_ref" % item] = row[1]
+                    results["%s_base_run" % item] = row[2]
+                    results["%s_base_ratio" % item] = row[3]
+                    results["%s_peak_ref" % item] = row[6]
+                    results["%s_peak_run" % item] = row[7]
+                    results["%s_peak_ratio" % item] = row[8]
                     break
 
     for item in spec_tests:
@@ -52,7 +57,12 @@ def parse_test_results():
             csv_handler = csv.reader(f)
             for row in csv_handler:
                 if item in row:
-                    results[item] = row[1]
+                    results["%s_base_ref" % item] = row[1]
+                    results["%s_base_run" % item] = row[2]
+                    results["%s_base_ratio" % item] = row[3]
+                    results["%s_peak_ref" % item] = row[6]
+                    results["%s_peak_run" % item] = row[7]
+                    results["%s_peak_ratio" % item] = row[8]
                     break
 
     results['end_time'] = datetime.now()
@@ -74,13 +84,48 @@ def save_test_results():
         start_time=results['start_time_formatted'],
         end_time=results['end_time_formatted'],
         test_duration=results['test_duration'],
-        perlbench=results['400.perlbench'],
-        bzip2=results['401.bzip2'],
-        gcc=results['403.gcc'],
-        mcf=results['429.mcf'],
-        xalancbmk=results['483.xalancbmk'],
-        soplex=results['450.soplex'],
-        sphinx3=results['482.sphinx3']
+        perlbench_base_ref=results['400.perlbench_base_ref'],
+        perlbench_base_run=results['400.perlbench_base_run'],
+        perlbench_base_ratio=results['400.perlbench_base_ratio'],
+        perlbench_peak_ref=results['400.perlbench_peak_ref'],
+        perlbench_peak_run=results['400.perlbench_peak_run'],
+        perlbench_peak_ratio=results['400.perlbench_peak_ratio'],
+        bzip2_base_ref=results['401.bzip2_base_ref'],
+        bzip2_base_run=results['401.bzip2_base_run'],
+        bzip2_base_ratio=results['401.bzip2_base_ratio'],
+        bzip2_peak_ref=results['401.bzip2_peak_ref'],
+        bzip2_peak_run=results['401.bzip2_peak_run'],
+        bzip2_peak_ratio=results['401.bzip2_peak_ratio'],
+        gcc_base_ref=results['403.gcc_base_ref'],
+        gcc_base_run=results['403.gcc_base_run'],
+        gcc_base_ratio=results['403.gcc_base_ratio'],
+        gcc_peak_ref=results['403.gcc_peak_ref'],
+        gcc_peak_run=results['403.gcc_peak_run'],
+        gcc_peak_ratio=results['403.gcc_peak_ratio'],
+        mcf_base_ref=results['429.mcf_base_ref'],
+        mcf_base_run=results['429.mcf_base_run'],
+        mcf_base_ratio=results['429.mcf_base_ratio'],
+        mcf_peak_ref=results['429.mcf_peak_ref'],
+        mcf_peak_run=results['429.mcf_peak_run'],
+        mcf_peak_ratio=results['429.mcf_peak_ratio'],
+        xalancbmk_base_ref=results['483.xalancbmk_base_ref'],
+        xalancbmk_base_run=results['483.xalancbmk_base_run'],
+        xalancbmk_base_ratio=results['483.xalancbmk_base_ratio'],
+        xalancbmk_peak_ref=results['483.xalancbmk_peak_ref'],
+        xalancbmk_peak_run=results['483.xalancbmk_peak_run'],
+        xalancbmk_peak_ratio=results['483.xalancbmk_peak_ratio'],
+        soplex_base_ref=results['450.soplex_base_ref'],
+        soplex_base_run=results['450.soplex_base_run'],
+        soplex_base_ratio=results['450.soplex_base_ratio'],
+        soplex_peak_ref=results['450.soplex_peak_ref'],
+        soplex_peak_run=results['450.soplex_peak_run'],
+        soplex_peak_ratio=results['450.soplex_peak_ratio'],
+        sphinx3_base_ref=results['482.sphinx3_base_ref'],
+        sphinx3_base_run=results['482.sphinx3_base_run'],
+        sphinx3_base_ratio=results['482.sphinx3_base_ratio'],
+        sphinx3_peak_ref=results['482.sphinx3_peak_ref'],
+        sphinx3_peak_run=results['482.sphinx3_peak_run'],
+        sphinx3_peak_ratio=results['482.sphinx3_peak_ratio']
     )
     session.add(Open_SpecCpu)
     session.commit()
@@ -151,11 +196,9 @@ for x in range(iterations):
     print "\nParsing test results...\n"
     int_result_csv = 'CINT2006.001.ref.csv'
     fp_result_csv = 'CFP2006.001.ref.csv'
-    cur_time = datetime.now().strftime('%Y%m%d_%H%M%S')
 
-    os.system('cp /SPEC/CPU2006/result/%s /SPEC/CPU2006/output/%s_INT_%s.csv' % (int_result_csv, iteration, cur_time))
-    os.system('cp /SPEC/CPU2006/result/%s /SPEC/CPU2006/output/%s_FP_%s.csv' % (fp_result_csv, iteration, cur_time))
-
+    os.system('cp /SPEC/CPU2006/result/%s /SPEC/CPU2006/output/%s_%s_INT.csv' % (int_result_csv, project_id, iteration))
+    os.system('cp /SPEC/CPU2006/result/%s /SPEC/CPU2006/output/%s_%s_FP.csv' % (fp_result_csv, project_id, iteration))
     parse_test_results()
     os.system('rm -rf /SPEC/CPU2006/result')
 
