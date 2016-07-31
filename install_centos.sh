@@ -26,4 +26,4 @@ echo ""
 rm spec_test_config.cfg
 cp $spec_conf spec_test_config.cfg
 cd $MYPATH
-./run_ubuntu.sh
+./run_centos.sh
