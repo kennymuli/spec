@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 import csv
 import time
+import shutil
 import subprocess as sub
 
 
@@ -27,8 +28,7 @@ def run_test_suite():
     """
     Run SPEC CPU suite
     """
-    spec_cmd = ['runspec', '--config', 'spec_test_config.cfg', '--noreportable', '--tune', 'base', '--output_format',
-                'csv', '--iterations', '1']
+    spec_cmd = ['runspec', '--config', 'spec_test_config.cfg', '--noreportable', '--output_format', 'csv', '--iterations', '1']
     spec_cmd.extend(spec_tests)
     sub.call(spec_cmd)
 
@@ -37,7 +37,7 @@ def parse_test_results():
     """
     Parse SPEC CPU test results
     """
-    os.chdir('/SPEC/CPU2006/result')
+    os.chdir(spec_result_dir)
 
     for item in spec_tests:
         with open(int_result_csv, 'rb') as f:
@@ -166,9 +166,20 @@ if populate_db:
     DBSession = sessionmaker(bind=Ignition)
     session = DBSession()
 
+spec_result_dir = '/SPEC/CPU2006/result'
+spec_output_dir = '/SPEC/CPU2006/output'
+int_result_csv = 'CINT2006.001.ref.csv'
+fp_result_csv = 'CFP2006.001.ref.csv'
+spec_tests = ['400.perlbench', '401.bzip2', '403.gcc', '429.mcf', '483.xalancbmk', '450.soplex', '482.sphinx3']
+
+if os.path.exists(spec_result_dir):
+    shutil.rmtree(spec_result_dir)
+
+if not os.path.exists(spec_output_dir):
+    os.makedirs(spec_output_dir)
+
 iteration = 1
 start = time.time()
-os.system('mkdir /SPEC/CPU2006/output')
 for x in range(iterations):
     stop = time.time() - start
     if stop >= duration:
@@ -189,18 +200,14 @@ for x in range(iterations):
 
     # RUN TEST SUITE
     print "\nExecuting SPEC CPU tests...\n"
-    spec_tests = ['400.perlbench', '401.bzip2', '403.gcc', '429.mcf', '483.xalancbmk', '450.soplex', '482.sphinx3']
     run_test_suite()
 
     # PARSE TEST RESULTS
     print "\nParsing test results...\n"
-    int_result_csv = 'CINT2006.001.ref.csv'
-    fp_result_csv = 'CFP2006.001.ref.csv'
-
-    os.system('cp /SPEC/CPU2006/result/%s /SPEC/CPU2006/output/%s_%s_INT.csv' % (int_result_csv, project_id, iteration))
-    os.system('cp /SPEC/CPU2006/result/%s /SPEC/CPU2006/output/%s_%s_FP.csv' % (fp_result_csv, project_id, iteration))
+    os.system('cp %s/%s %s/%s_%s_INT.csv' % (spec_result_dir, int_result_csv, spec_output_dir, project_id, iteration))
+    os.system('cp %s/%s %s/%s_%s_FP.csv' % (spec_result_dir, fp_result_csv, spec_output_dir, project_id, iteration))
     parse_test_results()
-    os.system('rm -rf /SPEC/CPU2006/result')
+    shutil.rmtree(spec_result_dir)
 
     if populate_db:
         # SAVE RESULTS IN DATABASE

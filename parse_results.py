@@ -45,8 +45,7 @@ def parse_test_results():
                         break
         return
     except Exception as e:
-        print "\nProject id does not exist\n"
-        exit()
+        raise e
 
 
 def save_test_results():

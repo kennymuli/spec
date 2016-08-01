@@ -1,19 +1,18 @@
 #!/bin/bash
 apt-get install build-essential
-gcc -v
-make -v
+apt-get install python-pip mysql-server libmysqlclient-dev libaio1 python-dev python-lxml --yes
 apt-get install wget --yes
 MYPATH=`pwd`
-#wget https://s3.amazonaws.com/vdbenchbuckettest/cpu2006-1.2.iso
-#mkdir -p /SPEC/CPU2006 /specisomount/cpu2006iso
-#mount -t iso9660 -o ro,exec cpu2006-1.2.iso /specisomount/cpu2006iso
-#cd /specisomount/cpu2006iso
-#./install.sh -d /SPEC/CPU2006
+wget https://s3.amazonaws.com/vdbenchbuckettest/cpu2006-1.2.iso
+mkdir -p /SPEC/CPU2006 /specisomount/cpu2006iso
+mount -t iso9660 -o ro,exec cpu2006-1.2.iso /specisomount/cpu2006iso
+cd /specisomount/cpu2006iso
+./install.sh -d /SPEC/CPU2006
 cd /SPEC/CPU2006
 source shrc
 cd $MYPATH
-#umount /specisomount/cpu2006iso
-#rm -rf /specisomount
+umount /specisomount/cpu2006iso
+rm -rf /specisomount
 
 cpu_arch=`uname -p`
 proc_model=`cat /proc/cpuinfo |grep "model name"|head -1`
@@ -29,4 +28,7 @@ echo ""
 rm spec_test_config.cfg
 cp $spec_conf spec_test_config.cfg
 cd $MYPATH
-./run_ubuntu.sh
+
+pip install mysql-python
+pip install sqlalchemy
+python base.py
