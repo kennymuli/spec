@@ -35,7 +35,7 @@ echo ""
 rm spec_test_config.cfg
 cp $spec_conf spec_test_config.cfg
 cd $MYPATH
-
 pip install mysql-python
 pip install sqlalchemy
 python base.py
+./run_centos.sh
