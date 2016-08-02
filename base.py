@@ -50,10 +50,10 @@ def parse_test_results():
     os.chdir(spec_result_dir)
 
     for csv_result in csv_results:
-        with open(csv_result, 'rb') as f:
-            csv_handler = csv.reader(f)
-            for row in csv_handler:
-                for item in spec_tests:
+        for item in spec_tests:
+            with open(csv_result, 'rb') as f:
+                csv_handler = csv.reader(f)
+                for row in csv_handler:
                     if item in row:
                         results["%s_base_copies" % item] = row[1] if row[1] is not None else ''
                         results["%s_base_runtime" % item] = row[2] if row[2] is not None else ''
@@ -163,7 +163,6 @@ if populate_db:
     Base.metadata.bind = Ignition
     DBSession = sessionmaker(bind=Ignition)
     session = DBSession()
-
 
 spec_tests = ['400.perlbench', '401.bzip2', '403.gcc', '429.mcf', '483.xalancbmk', '450.soplex', '482.sphinx3']
 
