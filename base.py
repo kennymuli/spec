@@ -33,10 +33,14 @@ def run_test_suite():
     v3 = sub.Popen(['wc', '-l'], stdin=v2.stdout, stdout=sub.PIPE)
     cpu_count = v3.communicate()[0]
     cpu_count = str(cpu_count)
-    spec_cmd = ['runspec', '--config', 'spec_test_config.cfg', '--tune', 'all', '--rate', cpu_count, '--noreportable',
-                '--output_format', 'csv', '--iterations', '1']
-    spec_cmd.extend(spec_tests)
-    sub.call(spec_cmd)
+
+    try:
+        spec_cmd = ['runspec', '--config', 'spec_test_config.cfg', '--tune', 'all', '--rate', cpu_count, '--noreportable',
+                    '--output_format', 'csv', '--iterations', '1']
+        spec_cmd.extend(spec_tests)
+        sub.call(spec_cmd)
+    except Exception as e:
+        raise e
 
 
 def parse_test_results():
