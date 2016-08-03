@@ -15,34 +15,22 @@ def parse_test_results():
     """
     Parse SPEC CPU test results
     """
-    os.chdir('/SPEC/CPU2006/output')
+    os.chdir(spec_output_dir)
 
     try:
-        for item in spec_tests:
-            with open(int_result_csv, 'rb') as f:
-                csv_handler = csv.reader(f)
-                for row in csv_handler:
-                    if item in row:
-                        results["%s_base_ref" % item] = row[1]
-                        results["%s_base_run" % item] = row[2]
-                        results["%s_base_ratio" % item] = row[3]
-                        results["%s_peak_ref" % item] = row[6]
-                        results["%s_peak_run" % item] = row[7]
-                        results["%s_peak_ratio" % item] = row[8]
-                        break
-
-        for item in spec_tests:
-            with open(fp_result_csv, 'rb') as f:
-                csv_handler = csv.reader(f)
-                for row in csv_handler:
-                    if item in row:
-                        results["%s_base_ref" % item] = row[1]
-                        results["%s_base_run" % item] = row[2]
-                        results["%s_base_ratio" % item] = row[3]
-                        results["%s_peak_ref" % item] = row[6]
-                        results["%s_peak_run" % item] = row[7]
-                        results["%s_peak_ratio" % item] = row[8]
-                        break
+        for csv_result in csv_results:
+            for item in spec_tests:
+                with open(csv_result, 'rb') as f:
+                    csv_handler = csv.reader(f)
+                    for row in csv_handler:
+                        if item in row:
+                            results["%s_base_copies" % item] = row[1] if row[1] is not None else ''
+                            results["%s_base_runtime" % item] = row[2] if row[2] is not None else ''
+                            results["%s_base_rate" % item] = row[3] if row[3] is not None else ''
+                            results["%s_peak_copies" % item] = row[6] if row[6] is not None else ''
+                            results["%s_peak_runtime" % item] = row[7] if row[7] is not None else ''
+                            results["%s_peak_rate" % item] = row[8] if row[8] is not None else ''
+                            break
         return
     except Exception as e:
         raise e
@@ -61,48 +49,48 @@ def save_test_results():
         start_time='-',
         end_time='-',
         test_duration='-',
-        perlbench_base_ref=results['400.perlbench_base_ref'],
-        perlbench_base_run=results['400.perlbench_base_run'],
-        perlbench_base_ratio=results['400.perlbench_base_ratio'],
-        perlbench_peak_ref=results['400.perlbench_peak_ref'],
-        perlbench_peak_run=results['400.perlbench_peak_run'],
-        perlbench_peak_ratio=results['400.perlbench_peak_ratio'],
-        bzip2_base_ref=results['401.bzip2_base_ref'],
-        bzip2_base_run=results['401.bzip2_base_run'],
-        bzip2_base_ratio=results['401.bzip2_base_ratio'],
-        bzip2_peak_ref=results['401.bzip2_peak_ref'],
-        bzip2_peak_run=results['401.bzip2_peak_run'],
-        bzip2_peak_ratio=results['401.bzip2_peak_ratio'],
-        gcc_base_ref=results['403.gcc_base_ref'],
-        gcc_base_run=results['403.gcc_base_run'],
-        gcc_base_ratio=results['403.gcc_base_ratio'],
-        gcc_peak_ref=results['403.gcc_peak_ref'],
-        gcc_peak_run=results['403.gcc_peak_run'],
-        gcc_peak_ratio=results['403.gcc_peak_ratio'],
-        mcf_base_ref=results['429.mcf_base_ref'],
-        mcf_base_run=results['429.mcf_base_run'],
-        mcf_base_ratio=results['429.mcf_base_ratio'],
-        mcf_peak_ref=results['429.mcf_peak_ref'],
-        mcf_peak_run=results['429.mcf_peak_run'],
-        mcf_peak_ratio=results['429.mcf_peak_ratio'],
-        xalancbmk_base_ref=results['483.xalancbmk_base_ref'],
-        xalancbmk_base_run=results['483.xalancbmk_base_run'],
-        xalancbmk_base_ratio=results['483.xalancbmk_base_ratio'],
-        xalancbmk_peak_ref=results['483.xalancbmk_peak_ref'],
-        xalancbmk_peak_run=results['483.xalancbmk_peak_run'],
-        xalancbmk_peak_ratio=results['483.xalancbmk_peak_ratio'],
-        soplex_base_ref=results['450.soplex_base_ref'],
-        soplex_base_run=results['450.soplex_base_run'],
-        soplex_base_ratio=results['450.soplex_base_ratio'],
-        soplex_peak_ref=results['450.soplex_peak_ref'],
-        soplex_peak_run=results['450.soplex_peak_run'],
-        soplex_peak_ratio=results['450.soplex_peak_ratio'],
-        sphinx3_base_ref=results['482.sphinx3_base_ref'],
-        sphinx3_base_run=results['482.sphinx3_base_run'],
-        sphinx3_base_ratio=results['482.sphinx3_base_ratio'],
-        sphinx3_peak_ref=results['482.sphinx3_peak_ref'],
-        sphinx3_peak_run=results['482.sphinx3_peak_run'],
-        sphinx3_peak_ratio=results['482.sphinx3_peak_ratio']
+        perlbench_base_copies=results['400.perlbench_base_copies'],
+        perlbench_base_runtime=results['400.perlbench_base_runtime'],
+        perlbench_base_rate=results['400.perlbench_base_rate'],
+        perlbench_peak_copies=results['400.perlbench_peak_copies'],
+        perlbench_peak_runtime=results['400.perlbench_peak_runtime'],
+        perlbench_peak_rate=results['400.perlbench_peak_rate'],
+        bzip2_base_copies=results['401.bzip2_base_copies'],
+        bzip2_base_runtime=results['401.bzip2_base_runtime'],
+        bzip2_base_rate=results['401.bzip2_base_rate'],
+        bzip2_peak_copies=results['401.bzip2_peak_copies'],
+        bzip2_peak_runtime=results['401.bzip2_peak_runtime'],
+        bzip2_peak_rate=results['401.bzip2_peak_rate'],
+        gcc_base_copies=results['403.gcc_base_copies'],
+        gcc_base_runtime=results['403.gcc_base_runtime'],
+        gcc_base_rate=results['403.gcc_base_rate'],
+        gcc_peak_copies=results['403.gcc_peak_copies'],
+        gcc_peak_runtime=results['403.gcc_peak_runtime'],
+        gcc_peak_rate=results['403.gcc_peak_rate'],
+        mcf_base_copies=results['429.mcf_base_copies'],
+        mcf_base_runtime=results['429.mcf_base_runtime'],
+        mcf_base_rate=results['429.mcf_base_rate'],
+        mcf_peak_copies=results['429.mcf_peak_copies'],
+        mcf_peak_runtime=results['429.mcf_peak_runtime'],
+        mcf_peak_rate=results['429.mcf_peak_rate'],
+        xalancbmk_base_copies=results['483.xalancbmk_base_copies'],
+        xalancbmk_base_runtime=results['483.xalancbmk_base_runtime'],
+        xalancbmk_base_rate=results['483.xalancbmk_base_rate'],
+        xalancbmk_peak_copies=results['483.xalancbmk_peak_copies'],
+        xalancbmk_peak_runtime=results['483.xalancbmk_peak_runtime'],
+        xalancbmk_peak_rate=results['483.xalancbmk_peak_rate'],
+        soplex_base_copies=results['450.soplex_base_copies'],
+        soplex_base_runtime=results['450.soplex_base_runtime'],
+        soplex_base_rate=results['450.soplex_base_rate'],
+        soplex_peak_copies=results['450.soplex_peak_copies'],
+        soplex_peak_runtime=results['450.soplex_peak_runtime'],
+        soplex_peak_rate=results['450.soplex_peak_rate'],
+        sphinx3_base_copies=results['482.sphinx3_base_copies'],
+        sphinx3_base_runtime=results['482.sphinx3_base_runtime'],
+        sphinx3_base_rate=results['482.sphinx3_base_rate'],
+        sphinx3_peak_copies=results['482.sphinx3_peak_copies'],
+        sphinx3_peak_runtime=results['482.sphinx3_peak_runtime'],
+        sphinx3_peak_rate=results['482.sphinx3_peak_rate']
     )
     session.add(Open_SpecCpu)
     session.commit()
@@ -121,11 +109,14 @@ vm_name = vm_name.lower()
 project_id = raw_input("\nPlease enter the project id: ")
 
 spec_tests = ['400.perlbench', '401.bzip2', '403.gcc', '429.mcf', '483.xalancbmk', '450.soplex', '482.sphinx3']
+spec_output_dir = '/SPEC/CPU2006/output'
+
 iteration = 1
 for x in range(iterations):
     results = {}
     int_result_csv = '%s_%s_INT.csv' % (project_id, iteration)
     fp_result_csv = '%s_%s_FP.csv' % (project_id, iteration)
+    csv_results = [int_result_csv, fp_result_csv]
     parse_test_results()
     save_test_results()
     iteration += 1
