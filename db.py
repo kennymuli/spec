@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, create_engine, __version__
 from sqlalchemy.ext.declarative import declarative_base
+from conf import *
 
 # Check which version of SQLAlchemy is currently being used.
 print "SQLAlchemy Version: " + __version__
@@ -64,7 +65,7 @@ class SpecCpu(Base):
 # Create an object, db, to act as the connect to the database.
 # The SQLEngine object is used to open the connection, which is what is being used in the db variable.
 # Format for create_engine is "engine://user:password@host:port/database"
-Ignition = create_engine("mysql://root:inapp@localhost:3306/performance_tests")
+Ignition = create_engine("mysql://%s:%s@%s:3306/%s" % (db_user, db_password, db_host, db_name), pool_recycle=30)
 
 # Holds all the database metadata.
 Base.metadata.create_all(Ignition)

@@ -8,7 +8,7 @@ cpu_arch=`uname -p`
 proc_model=`cat /proc/cpuinfo |grep "model name"|head -1`
 
 echo ""
-echo "Your Processor $proc_model and Architecture : $cpu_arch. Please copy and paste the relevant configuration file that matches your machine from the list shown below: "
+echo "Your Processor is: $proc_model and the Architecture is: $cpu_arch. Please copy and paste the relevant configuration file that matches your machine from the list shown below: "
 echo ""
 cd /SPEC/CPU2006/config/
 ls Example*
